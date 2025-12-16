@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="estilo.css">
+</head>
+
+<body style="background: url('IMG/Imagem\ fundo.jpg') no-repeat center center fixed; background-size: cover;">
+
+<body>
+  <div class="form-container">
+    <div class="logo">
+      <img src="Captura de tela .png" alt="Logo da empresa">
+    </div>
+
+    <h1>Login</h1>
+
+    <form id="loginForm">
+      <div class="input-group">
+        <label for="nome-login">Nome Completo:</label>
+        <input type="text" id="nome-login" required>
+      </div>
+
+      <div class="input-group">
+        <label for="cpf-login">CPF:</label>
+        <input id="cpf" type="text" placeholder="000.000.000.00" required>
+      </div>
+
+      <div class="input-group">
+        <label for="area">Área:</label>
+        <select id="area" required>
+          <option value="administrador">Administrador</option>
+          <option value="funcionario">Funcionário</option>
+        </select>
+      </div>
+
+      <button type="submit" class="submit-btn">Entrar</button>
+      
+    </form>
+
+    <p style="margin-top: 10px;">Crie uma conta aqui! <a href="cadastro.html">Clique aqui</a></p>
+  </div>
+
+  <!-- SCRIPT PARA REDIRECIONAMENTO -->
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(event){
+      event.preventDefault();  // impede enviar o formulário e recarregar a página
+
+      const area = document.getElementById("area").value;
+
+      if(area === "administrador"){
+        window.location.href = "paginaADM.html";   // Página do administrador
+      } 
+      else {
+        window.location.href = "PrimeiraPagina.html"; // Página do funcionário
+      }
+    });
+  </script>
+
+</body>
+</html>

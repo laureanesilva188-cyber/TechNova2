@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Controle de Estoque — Produtos</title>
+  <link rel="stylesheet" href="ADM.css">
+</head>
+<body style="background: url('IMG/Imagem\ fundo.jpg') no-repeat center center fixed; background-size: cover;">
+
+<body>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="app">
+
+  <!-- MENU LATERAL -->
+  <aside class="sidebar">
+
+    <div class="brand">Controle de Estoque</div>
+
+    <nav class="nav">
+      <a href="#" class="active">Produtos</a>
+      <a href="index.html">Dashboard</a>
+      <a href="relatorios.html">Relatórios</a>
+    </nav>
+
+    <!-- GRÁFICO DE PIZZA -->
+    <div id="side-chart-box">
+      <h3>Distribuição por Categoria</h3>
+      <canvas id="pieChart" width="200" height="200"></canvas>
+    </div>
+
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="card">
+
+    <div class="breadcrumb">Home › Produtos</div>
+    <h1>Produtos</h1>
+
+    <div class="info-boxes">
+      <div class="box">
+        <div class="box-title">Total de Produtos</div>
+        <div class="box-value" id="info-total">0</div>
+      </div>
+
+      <div class="box">
+        <div class="box-title">Categorias</div>
+        <div class="box-value" id="info-categorias">0</div>
+      </div>
+
+      <div class="box">
+        <div class="box-title">Baixo Estoque</div>
+        <div class="box-value" id="info-baixo">0</div>
+      </div>
+    </div>
+
+    <div class="update-time" id="update-time"></div>
+
+    <div class="controls">
+      <div class="search">
+        <input id="search" placeholder="Pesquisar produtos...">
+      </div>
+      <button class="btn" id="btn-add">Adicionar Produto</button>
+    </div>
+
+    <div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Categoria</th>
+        <th>Quantidade</th>
+        <th>Preço</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+  </table>
+</div>
+
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <h3>Adicionar Produto</h3>
+
+    <div class="field">
+      <label>Nome</label>
+      <input id="p-name">
+    </div>
+    <div class="field">
+      <label>Categoria</label>
+      <select id="p-category">
+        <option>Acessórios</option>
+        <option>Eletrônicos</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Quantidade</label>
+      <input id="p-qty" type="number" min="0">
+    </div>
+    <div class="field">
+      <label>Preço (R$)</label>
+      <input id="p-price" type="number" step="0.01" min="0">
+    </div>
+
+    <button class="btn" id="save-product">Salvar</button>
+  </div>
+</div>
+
+
+<a href="login.html" class="voltar">← Voltar</a>
+
+
+
+<script>
+/* DADOS */
+const products = [
+  {id:1, name:'Processador Intel i3', category:'Processadores', qty:120, price:450},
+  {id:2, name:'Processador Intel i5', category:'Processadores', qty:80, price:850},
+  {id:3, name:'Processador Intel i7', category:'Processadores', qty:40, price:1500},
+  {id:4, name:'Ryzen 3 4100', category:'Processadores', qty:60, price:500},
+  {id:5, name:'Ryzen 5 5600G', category:'Processadores', qty:30, price:900},
+
+  {id:6, name:'Memória RAM 8GB DDR4', category:'Memórias', qty:200, price:120},
+  {id:7, name:'Memória RAM 16GB DDR4', category:'Memórias', qty:150, price:220},
+  {id:8, name:'Memória RAM 32GB DDR4', category:'Memórias', qty:70, price:420},
+
+  {id:9, name:'SSD 240GB SATA', category:'Armazenamento', qty:300, price:100},
+  {id:10, name:'SSD 480GB SATA', category:'Armazenamento', qty:180, price:180},
+  {id:11, name:'SSD 1TB NVMe', category:'Armazenamento', qty:45, price:350},
+  {id:12, name:'HD 1TB', category:'Armazenamento', qty:60, price:250},
+
+  {id:13, name:'Fonte 500W 80 Plus', category:'Fontes', qty:90, price:220},
+  {id:14, name:'Fonte 650W 80 Plus Bronze', category:'Fontes', qty:55, price:350},
+
+  {id:15, name:'Placa de Vídeo GTX 1050 Ti', category:'Placas de Vídeo', qty:25, price:1200},
+  {id:16, name:'Placa de Vídeo GTX 1650', category:'Placas de Vídeo', qty:18, price:1600},
+  {id:17, name:'Placa de Vídeo RTX 2060', category:'Placas de Vídeo', qty:10, price:2200},
+  {id:18, name:'Placa de Vídeo RX 580 8GB', category:'Placas de Vídeo', qty:12, price:1300},
+
+  {id:19, name:'Placa-Mãe B450', category:'Placas-Mãe', qty:42, price:500},
+  {id:20, name:'Placa-Mãe H510', category:'Placas-Mãe', qty:37, price:550}
+];
+
+
+const tbody = document.getElementById("table-body");
+const search = document.getElementById("search");
+
+/* GRÁFICO PIZZA */
+let pieChart;
+
+/* FUNÇÃO FORMATAR */
+function formatBRL(v){
+  return new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(v);
+}
+
+/* ATUALIZA INFOS */
+function updateInfo(){
+  document.getElementById("info-total").textContent = products.length;
+
+  const categorias = new Set(products.map(p => p.category));
+  document.getElementById("info-categorias").textContent = categorias.size;
+
+  const baixo = products.filter(p => p.qty < 30).length;
+  document.getElementById("info-baixo").textContent = baixo;
+
+  document.getElementById("update-time").textContent =
+    "Última atualização: " + new Date().toLocaleString("pt-BR");
+
+  updatePieChart();
+}
+
+/* TABELA */
+function render(list){
+  tbody.innerHTML = "";
+
+  list.forEach(p => {
+    const tr = document.createElement("tr");
+
+    let stockClass = "";
+    if (p.qty >= 100) stockClass = "stock-high";
+    else if (p.qty >= 30) stockClass = "stock-medium";
+    else stockClass = "stock-low";
+
+    tr.classList.add(stockClass);
+
+    tr.innerHTML = `
+      <td>${p.name}</td>
+      <td>${p.category}</td>
+      <td>${p.qty}</td>
+      <td>${formatBRL(p.price)}</td>
+      <td>
+        <button onclick="removeProduct(${p.id})"
+          style="background:#fee2e2;color:#991b1b;border:none;padding:6px 10px;border-radius:8px;">
+          Excluir
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  updateInfo();
+}
+
+/* FILTRO */
+search.addEventListener("input",()=>{
+  const q = search.value.toLowerCase();
+  const filtered = products.filter(
+    p=>p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
+  );
+  render(filtered);
+});
+
+/* REMOVE PRODUTO */
+window.removeProduct = function(id){
+  const i = products.findIndex(p => p.id === id);
+  products.splice(i,1);
+  render(products);
+};
+
+/* MODAL */
+const modal = document.getElementById("modal");
+const btnAdd = document.getElementById("btn-add");
+const saveProduct = document.getElementById("save-product");
+
+btnAdd.onclick = ()=> modal.style.display = "flex";
+
+modal.onclick = e => {
+  if(e.target === modal){
+    modal.style.display = "none";
+  }
+};
+
+saveProduct.onclick = () => {
+  const name = document.getElementById("p-name").value;
+  const category = document.getElementById("p-category").value;
+  const qty = Number(document.getElementById("p-qty").value);
+  const price = Number(document.getElementById("p-price").value);
+
+  const id = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
+
+  products.push({id,name,category,qty,price});
+  modal.style.display = "none";
+  render(products);
+};
+
+/* GRÁFICO DE PIZZA */
+function updatePieChart(){
+  const categories = [...new Set(products.map(p => p.category))];
+
+  const totals = categories.map(cat =>
+    products.filter(p => p.category === cat)
+            .reduce((sum,p)=>sum+p.qty,0)
+  );
+
+  if (pieChart) pieChart.destroy();
+
+  pieChart = new Chart(document.getElementById("pieChart"),{
+    type:'pie',
+    data:{
+      labels: categories,
+      datasets:[{
+        data: totals,
+        backgroundColor:[
+          "#60a5fa",
+          "#34d399",
+          "#fbbf24",
+          "#f87171"
+        ]
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{
+        legend:{ position:"bottom" }
+      }
+    }
+  });
+}
+
+/* INICIALIZA */
+render(products);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,203 @@
+/* 🔹 Reset geral */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 🔹 Corpo da página */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #CCCCCC; /* Cinza metálico */
+    line-height: 1.6;
+
+    /* 🔹 Fundo com imagem ocupando a tela toda */
+    background: url('IMG/fundo.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+
+.logo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+
+
+/* 🔹 Cabeçalho */
+header {
+    background-color: rgba(23, 37, 84, 0.671); /* azul escuro com transparência */
+    text-align: center;
+    padding: 12px 0;
+}
+
+
+.botoes-menu {
+  margin-top: 23px;
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* espaço entre os botões */
+}
+
+.btn-circulo {
+  display: inline-block;
+  padding: 8px 8px;
+  background: #a0a0a0;
+  color: #f7efef;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 50px; /* deixa as bordas redondas */
+  transition: 0.25s;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 10px rgba(159, 150, 150, 0.15);
+}
+
+.btn-circulo:hover {
+  background: #4d4d51;
+  transform: translateY(-3px);
+}
+
+
+.header-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.titulo-site {
+    text-align: center;
+}
+
+/*Login*/
+.login-btn{
+    padding: 8px 16px;
+    border: 1px solid#e7e4ef;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+header h1 {
+    color: #f2eff8; /* Verde Neon Gamer */
+    margin-bottom: 1px;
+    font-family: 'Arial Black', sans-serif; /*Fonte do titulo*/
+}
+
+header p {
+    color: #fdf2f2;
+    font-size: 16px;
+}
+
+/* 🔹 Seções Missão, Visão, Descrição e Contatos */
+.section {
+    background-color: rgba(214, 212, 212, 0.808); /* mesmo cinza, mas com transparência */
+    margin: 20px 0;
+    padding: 30px 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(223, 11, 110, 0.1);
+}
+
+
+.section h2 {
+    color: #15193f; 
+    margin-bottom: 15px;
+    text-align: left;
+    font-family: 'Arial Black', sans-serif;
+}
+
+.section p {
+    color: #151010;
+    font-size: 13px;
+    text-align: left;
+}
+
+/* 🔹 Produtos em destaque */
+.produtos-lista {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.produto {
+    background-color: #172554;
+    border: 1px solid #e9f5ee33; 
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    width: 250px;
+    box-shadow: 0 2px 6px rgba(217, 234, 224, 0.15);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.produto img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.produto h3 {
+    color: #fdfdff; /* Verde neon para títulos */
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+.produto p {
+    color: #f8ebeb;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* 🔹 Botão (classe dentro do produto) */
+.produto .encomendar {
+    padding: 10px 15px;
+    background-color: #bdbdc9; /* Verde Neon Gamer */
+    color: #0A0A0A; /* Preto */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.produto .encomendar:hover {
+    background-color: #6e6a6d; /* Verde gamer mais escuro */
+    box-shadow: 0 0 10px #1f2e6c;
+}
+
+/* 🔹 Hover no card */
+.produto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px #f3eef855; /* Efeito gamer neon */
+}
+
+/* 🔹 Rodapé */
+footer {
+    background-color: #1A1A1A;
+    color: #ccccd2;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 20px;
+}
+
+/* 🔹 Botão (classe separada Encomendar) */
+.Encomendar {
+    padding: 10px 15px;
+    background-color: #a0a0a0;
+    color: #fbf8f8;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+/* Hover Gamer */
+.Encomendar:hover {
+    background-color: #808084;
+    box-shadow: 0 0 10px #4d4c4e;
+}
